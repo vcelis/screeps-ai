@@ -15,15 +15,15 @@ module.exports.loop = function () {
   /**
    * Tower management
    */
-  var tower = Game.getObjectById('TOWER_ID');
-  if(tower) {
-    var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+  var towers = _.filter(Game.structures, s => s.structureType == STRUCTURE_TOWER);
+  for(let tower of towers) {
+    let closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
     if(closestHostile) {
       tower.attack(closestHostile);
     }
-
     var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-      filter: (structure) => structure.hits < structure.hitsMax
+      filter: (structure) => (structure.hits < structure.hitsMax) &&
+                             (structure.structureType != STRUCTURE_WALL)
     });
     if(closestDamagedStructure) {
       tower.repair(closestDamagedStructure);
@@ -34,7 +34,7 @@ module.exports.loop = function () {
    * Harvesters management
    */
   var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
-  if(harvesters.length < 2) {
+  if(harvesters.length < 4) {
     let newName = 'Harvester' + Game.time;
     Game.spawns['Spawn1'].spawnCustomCreep(newName, 'harvester');
   }
@@ -53,7 +53,7 @@ module.exports.loop = function () {
    * Repairers management
    */
   var repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer');
-  if(repairers.length < 2) {
+  if(repairers.length < 0) {
     var newName = 'Repairer' + Game.time;
     Game.spawns['Spawn1'].spawnCustomCreep(newName, 'repairer');
     //Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName, {memory: {role: 'repairer'}});
@@ -63,11 +63,13 @@ module.exports.loop = function () {
    * Upgraders management
    */
   var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
-  if(upgraders.length < 4) {
+  if(upgraders.length < 3) {
     var newName = 'Upgrader' + Game.time;
     Game.spawns['Spawn1'].spawnCustomCreep(newName, 'upgrader');
     //Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName, {memory: {role: 'upgrader'}});
   }
+
+  Game.spawns['Spawn1'].spawnMiner();
 
   /**
    * Visual spawn text

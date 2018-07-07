@@ -3,7 +3,8 @@ var roleBuilder = require('role.builder');
 var roleRepairer = {
   /** @param {Creep} creep **/
   run: function(creep) {
-    if(creep.memory.upgrading) {
+    this.getNextTarget(creep);
+    if(creep.memory.building) {
       roleBuilder.run(creep);
       return;
     }
@@ -25,7 +26,7 @@ var roleRepairer = {
       if(!this.checkRepairTarget(creep)) {
         creep.memory.repairTarget = this.getNextTarget(creep);
       }
-      // Check if there is any structure left to repair, if not, go upgrade.
+      // Check if there is any structure left to repair, if not, go build.
       if(creep.memory.repairTarget) {
         this.tryToRepair(creep);
       } else {
@@ -39,9 +40,17 @@ var roleRepairer = {
   /** @param {Creep} creep **/
   getNextTarget: function(creep) {
     let targets = creep.room.find(FIND_STRUCTURES, {
-      filter: object => (object.hits < (object.hitsMax*0.1))
-      //filter: object => (object.hits < object.hitsMax) && (object.structureType != STRUCTURE_ROAD)
+      //filter: object => (object.hits < (object.hitsMax*0.9)) && (object.structureType != STRUCTURE_WALL)
+      filter: object => (object.hits < (object.hitsMax*0.9)) &&
+                        (object.structureType != STRUCTURE_WALL) &&
+                        (creep.pos.getRangeTo(object.pos) < 10)
     });
+    // If there are no targets to repair within 10 distance
+    if(!targets[0]) {
+      targets = creep.room.find(FIND_STRUCTURES, {
+        filter: object => (object.hits < (object.hitsMax*0.9)) && (object.structureType != STRUCTURE_WALL)
+      });
+    }
     targets.sort((a,b) => a.hits - b.hits);
     return (targets[0] ? targets[0].id : undefined);
   },

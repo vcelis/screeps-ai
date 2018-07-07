@@ -1,12 +1,13 @@
-var roleBuilder = require('role.builder');
+//var roleUpgrader = require('role.upgrader');
 
 var roleHarvester = {
   /** @param {Creep} creep **/
   run: function(creep) {
-    if(creep.memory.building) {
-      roleBuilder.run(creep);
+    /**
+    if(creep.memory.upgrading) {
+      roleUpgrader.run(creep);
       return;
-    }
+    }**/
 
     // If energy empty, reset memory variables and get energy
     if(creep.carry.energy == 0 || (!creep.memory.harvesting && (creep.carry.energy < creep.carryCapacity))) {
@@ -25,13 +26,13 @@ var roleHarvester = {
       if(!this.checkTransferTarget(creep)) {
         creep.memory.transferTarget = this.getNextTarget(creep);
       }
-      // Check if there is any structure left to transfer, if not, go building.
+      // Check if there is any structure left to transfer, if not, go upgrading.
       if(creep.memory.transferTarget) {
         this.tryToTransfer(creep);
       } else {
         creep.memory.harvesting = false;
         delete creep.memory.transferTarget;
-        roleBuilder.run(creep);
+        //roleUpgrader.run(creep);
       }
     }
   },
