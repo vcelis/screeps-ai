@@ -13,18 +13,13 @@ StructureSpawn.prototype.spawnCustomCreep =
     let numberOfParts = Math.floor(this.room.energyCapacityAvailable/200);
     // Creep has maximum 50 parts.
     numberOfParts = Math.min(numberOfParts, Math.floor(50/3));
+    numberOfParts = numberOfParts > 3 ? 3 : numberOfParts;
     // Creep body array to create
     let body = [];
     for(let i = 0; i < numberOfParts; i++) {
       body.push(WORK);
       body.push(CARRY);
       body.push(MOVE);
-    }
-    // Memory cleanup
-    for(let name in Memory.creeps) {
-      if(!Game.creeps[name]) {
-        delete Memory.creeps[name];
-      }
     }
     return this.spawnCreep(body, newName, {memory: {role: newRole}});
   };
@@ -43,7 +38,6 @@ StructureSpawn.prototype.spawnMiner =
     let containerStructures = this.room.find(FIND_STRUCTURES, {
       filter: structure => structure.structureType == STRUCTURE_CONTAINER
     });
-    //console.log(JSON.stringify(containerStructures));
     for(let container in containerStructures) {
       containers.push(containerStructures[container].id);
     }
@@ -51,13 +45,6 @@ StructureSpawn.prototype.spawnMiner =
     let containersFree = containers.filter(function(i) {return containersInUse.indexOf(i) < 0;});
 
     if(containersFree.length > 0) {
-      // Memory cleanup
-      for(let name in Memory.creeps) {
-        if(!Game.creeps[name]) {
-          delete Memory.creeps[name];
-        }
-      }
-
       // Fabricate body
       let numberOfParts = Math.floor((this.room.energyCapacityAvailable-100)/100);
       numberOfParts = Math.min(numberOfParts, Math.floor(50/3));

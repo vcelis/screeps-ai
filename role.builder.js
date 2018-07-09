@@ -22,7 +22,6 @@ var roleBuilder = {
       }
       else {
         roleUpgrader.run(creep);
-        //console.log("Builder " + creep.name + " has nothing to do. Upgrading instead.");
       }
     }
     else {

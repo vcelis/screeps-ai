@@ -39,6 +39,16 @@ var roleHarvester = {
 
   /** @param {Creep} creep **/
   getNextTarget: function(creep) {
+    let emptyTowers = creep.room.find(FIND_STRUCTURES, {
+      filter: (structure) => {
+        return (structure.structureType == STRUCTURE_TOWER &&
+                structure.energy < (structure.energyCapacity*0.5))
+      }
+    });
+    if(emptyTowers[0]) {
+      return emptyTowers[0].id;
+    }
+
     let targets = creep.room.find(FIND_STRUCTURES, {
       filter: (structure) => {
         return (structure.structureType == STRUCTURE_EXTENSION ||
@@ -49,6 +59,7 @@ var roleHarvester = {
     });
     // Sort to select closest target
     targets = _.sortBy(targets, s => creep.pos.getRangeTo(s));
+    //console.log(JSON.stringify(targets[0]));
     return (targets[0] ? targets[0].id : undefined);
   },
 
@@ -64,6 +75,7 @@ var roleHarvester = {
   checkTransferTarget: function(creep) {
     let shortage;
     if(creep.memory.transferTarget) {
+      //console.log(JSON.stringify(creep.memory));
       shortage = Game.getObjectById(creep.memory.transferTarget).energyCapacity - Game.getObjectById(creep.memory.transferTarget).energy;
     }
     return (shortage ? true : false);

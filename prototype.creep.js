@@ -1,20 +1,15 @@
 /**
- *  Object to keep different roles.
- *  This way we can only load the one needed.
- */
-var roles = {
-  harvester: require('role.harvester'),
-  upgrader: require('role.upgrader'),
-  builder: require('role.builder'),
-  repairer: require('role.repairer'),
-  miner: require('role.miner')
-};
-
-/**
  *  Add runRole method to prototype to run designated role.
  */
 Creep.prototype.runRole =
   function () {
+    let roles = {
+      harvester: require('role.harvester'),
+      upgrader: require('role.upgrader'),
+      builder: require('role.builder'),
+      repairer: require('role.repairer'),
+      miner: require('role.miner')
+    };
     roles[this.memory.role].run(this);
   };
 
@@ -37,9 +32,8 @@ Creep.prototype.getEnergy =
     // find closest container
     container = this.pos.findClosestByPath(FIND_STRUCTURES, {
       filter: s => (s.structureType == STRUCTURE_CONTAINER || s.structureType == STRUCTURE_STORAGE) &&
-                    s.store[RESOURCE_ENERGY] > 0
+                    s.store[RESOURCE_ENERGY] > this.carryCapacity
     });
-
     if (container) {
       // try to withdraw energy, if the container is not in range
       if (this.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
