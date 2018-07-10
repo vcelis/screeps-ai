@@ -35,7 +35,7 @@ module.exports.loop = function () {
    * Harvesters management
    */
   var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
-  if(harvesters.length < 3) {
+  if(harvesters.length < 2) {
     let newName = 'Harvester' + Game.time;
     Game.spawns['Spawn1'].spawnCustomCreep(newName, 'harvester');
   }
@@ -44,7 +44,7 @@ module.exports.loop = function () {
    * Builders management
    */
   var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
-    if(builders.length < 2) {
+    if(builders.length < 1) {
       var newName = 'Builder' + Game.time;
       Game.spawns['Spawn1'].spawnCustomCreep(newName, 'builder');
       //Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName, {memory: {role: 'builder'}});

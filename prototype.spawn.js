@@ -13,7 +13,7 @@ StructureSpawn.prototype.spawnCustomCreep =
     let numberOfParts = Math.floor(this.room.energyCapacityAvailable/200);
     // Creep has maximum 50 parts.
     numberOfParts = Math.min(numberOfParts, Math.floor(50/3));
-    numberOfParts = numberOfParts > 3 ? 3 : numberOfParts;
+    //numberOfParts = numberOfParts > 3 ? 3 : numberOfParts;
     // Creep body array to create
     let body = [];
     for(let i = 0; i < numberOfParts; i++) {
