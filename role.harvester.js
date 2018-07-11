@@ -30,9 +30,19 @@ var roleHarvester = {
       if(creep.memory.transferTarget) {
         this.tryToTransfer(creep);
       } else {
-        creep.memory.harvesting = false;
-        delete creep.memory.transferTarget;
         //roleUpgrader.run(creep);
+        let storage = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+          filter: s => (s.structureType == STRUCTURE_STORAGE &&
+                        s.store[RESOURCE_ENERGY] < s.storeCapacity)
+        });
+        if(storage) {
+          creep.memory.transferTarget = storage.id;
+          let transfer = creep.transfer(Game.getObjectById(creep.memory.transferTarget), RESOURCE_ENERGY);
+          if(transfer == ERR_NOT_IN_RANGE) {
+            creep.moveTo(Game.getObjectById(creep.memory.transferTarget), {visualizePathStyle: {stroke: '#00ff00', opacity: 0.2}});
+          }
+          //this.tryToTransfer(creep);
+        }
       }
     }
   },

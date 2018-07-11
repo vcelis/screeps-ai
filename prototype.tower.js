@@ -15,7 +15,7 @@ StructureTower.prototype.defend =
 StructureTower.prototype.repairStructure =
   function () {
     let closestDamagedStructure = this.pos.findClosestByRange(FIND_STRUCTURES, {
-      filter: (structure) => (structure.hits < structure.hitsMax) &&
+      filter: (structure) => (structure.hits < (structure.hitsMax*0.9)) &&
                              (structure.structureType != STRUCTURE_WALL)
     });
     if(closestDamagedStructure) {
